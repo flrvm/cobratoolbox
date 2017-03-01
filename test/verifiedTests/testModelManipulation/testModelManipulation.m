@@ -170,5 +170,45 @@ model.rev(20) = 1;
 % test if both models are the same
 assert(isSameCobraModel(modelIrrev, testModelIrrev));
 
+% Tests on ecoli_core
+load('ecoli_core_model.mat', 'model');
+mets_length = length(model.mets);
+rxns_length = length(model.rxns);
+
+% test feasability
+solFBA_init = optimizeCbModel(model); % not possible to do it, no c vector (objective function)
+if solFBA_init.stat ~=1
+    disp('1. optimizeCbModel did not produce a feasible solution for the initial model');
+end
+
+% add a new reaction to the model
+model = addReaction(model,'newRxn1','A -> B + 2 C');
+
+% check if the number of reactions was incremented by 1
+assert(length(model.rxns) == rxns_length + 1);
+
+% check if the number of metabolites was incremented by 3
+assert(length(model.mets) == mets_length + 3);
+
+% test feasability
+solFBA_newRxn = optimizeCbModel(model); % not possible to do it, no c vector (objective function)
+if solFBA_newRxn.stat ~=1
+    disp('1. optimizeCbModel did not produce a feasible solution for the model with newRxn1');
+end
+
+% remove the reaction
+model = removeRxns(model, {'newRxn1'});
+assert(length(model.rxns) == rxns_length);
+
+% remove some metabolites
+model = removeMetabolites(model, {'A', 'B', 'C'});
+assert(length(model.mets) == mets_length);
+
+% test feasability
+solFBA_removeNewRxn = optimizeCbModel(model); % not possible to do it, no c vector (objective function)
+if solFBA_removeNewRxn.stat ~=1
+    disp('1. optimizeCbModel did not produce a feasible solution for the model after removing newRxn1');
+end
+
 % change the directory
 cd(CBTDIR)
