@@ -193,7 +193,7 @@ assert(length(model.mets) == mets_length + 3);
 % test feasability
 solFBA_newRxn = optimizeCbModel(model); % not possible to do it, no c vector (objective function)
 if solFBA_newRxn.stat ~=1
-    disp('1. optimizeCbModel did not produce a feasible solution for the model with newRxn1');
+    disp('2. optimizeCbModel did not produce a feasible solution for the model with newRxn1');
 end
 
 % remove the reaction
@@ -207,7 +207,7 @@ assert(length(model.mets) == mets_length);
 % test feasability
 solFBA_removeNewRxn = optimizeCbModel(model); % not possible to do it, no c vector (objective function)
 if solFBA_removeNewRxn.stat ~=1
-    disp('1. optimizeCbModel did not produce a feasible solution for the model after removing newRxn1');
+    disp('3. optimizeCbModel did not produce a feasible solution for the model after removing newRxn1');
 end
 
 % change the directory
